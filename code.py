@@ -13,7 +13,7 @@ class taobao_infos:
         # 打开网页
         self.browser.get(self.url)
 
-        register_parent = self.browser.find_element_by_xpath('//*[@id="parentAccount"]')
+        register_parent = self.browser.find_element_by_id('parentAccount')
         register_parent.send_keys('perry_04')
 
         register_account = self.browser.find_element_by_xpath('//*[@id="articles"]/div[2]/form/fieldset[1]/div[2]/div[1]/input')
