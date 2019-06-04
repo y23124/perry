@@ -1,45 +1,66 @@
 from selenium import webdriver
+from selenium.webdriver.support.ui import Select
+import time
 
-# 定义一个taobao类
-class taobao_infos:
 
-    # 对象初始化
+class Yahoo:
+
     def __init__(self):
         self.url = url
         self.browser = webdriver.Chrome(chromedriver_path)
 
-    # 登录淘宝
-    def login(self):
-        # 打开网页
+
+    def register(self):
         self.browser.get(self.url)
 
-        register_parent = self.browser.find_element_by_id('parentAccount')
-        register_parent.send_keys('perry_04')
+        register_firstName = self.browser.find_element_by_id('usernamereg-firstName')
+        register_firstName.send_keys('曉明')
+        time.sleep(0.5)
 
-        register_account = self.browser.find_element_by_xpath('//*[@id="articles"]/div[2]/form/fieldset[1]/div[2]/div[1]/input')
-        register_account.send_keys('perry')
+        register_lastName = self.browser.find_element_by_id('usernamereg-lastName')
+        register_lastName.send_keys('王')
+        time.sleep(0.5)
 
-        register_password = self.browser.find_element_by_xpath('//*[@id="articles"]/div[2]/form/fieldset[1]/div[3]/div[1]/input')
-        register_password.send_keys('aa1234')
+        register_email = self.browser.find_element_by_id('usernamereg-yid')
+        register_email.send_keys('test123')
+        time.sleep(0.5)
 
-        register_confirm_password = self.browser.find_element_by_xpath('//*[@id="articles"]/div[2]/form/fieldset[1]/div[4]/div[1]/input')
-        register_confirm_password.send_keys('aa1234')
+        register_password = self.browser.find_element_by_id('usernamereg-password')
+        register_password.send_keys('123456789')
+        time.sleep(0.5)
 
-        register_wihdraw_password = self.browser.find_element_by_xpath('//*[@id="articles"]/div[2]/form/fieldset[1]/div[5]/div[1]/input')
-        register_wihdraw_password.send_keys('123')
+        register_shortCountryCode = Select(self.browser.find_element_by_name('shortCountryCode'))
+        op = register_shortCountryCode.first_selected_option
+        if op.text != '台灣 ‪(+886)‬':
+            register_shortCountryCode.select_by_value('TW')
+        time.sleep(0.5)
 
-        register_real_name = self.browser.find_element_by_xpath('//*[@id="articles"]/div[2]/form/fieldset[1]/div[6]/div[1]/input')
-        register_real_name.send_keys('perry')
+        register_phone = self.browser.find_element_by_id('usernamereg-phone')
+        register_phone.send_keys('0912345679')
+        time.sleep(0.5)
 
-        register_vcode = self.browser.find_element_by_xpath('//*[@id="checkcode-input-group"]/input')
-        register_vcode.send_keys('1234')
+        register_month = Select(self.browser.find_element_by_id('usernamereg-month'))
+        register_month.select_by_value('6')
+        time.sleep(0.5)
 
-        register_submit = self.browser.find_element_by_xpath('//*[@id="btn-submit"]')
+        register_day = self.browser.find_element_by_id('usernamereg-day')
+        register_day.send_keys('8')
+        time.sleep(0.5)
+
+        register_year = self.browser.find_element_by_id('usernamereg-year')
+        register_year.send_keys('1990')
+        time.sleep(0.5)
+
+        register_sex = self.browser.find_element_by_id('usernamereg-freeformGender')
+        register_sex.send_keys('男性')
+        time.sleep(0.5)
+
+        register_submit = self.browser.find_element_by_id('reg-submit-button')
         register_submit.click()
 
 
 if __name__ == "__main__":
-    chromedriver_path = r'C:\Users\ADMIN\PycharmProjects\chromedriver.exe'  # 改成你的chromedriver的完整路径地址
-    url = r'http://www.rfben.com/Register'
-    a = taobao_infos()
-    a.login()  # 登录
+    chromedriver_path = r'C:\Users\Administrator\PycharmProjects\perry\chromedriver.exe'
+    url = r'https://login.yahoo.com/account/create?.src=twfp&.lang=zh-Hant-TW&.intl=tw&.done=https%3A%2F%2Ftw.yahoo.com%2F&specId=yidReg'
+    a = Yahoo()
+    a.register()
