@@ -1,74 +1,55 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import re
 import time
+
 
 class Yahoo:
 
     def __init__(self):
         self.url = url
         self.browser = webdriver.Chrome(chromedriver_path)
-
-
-    def register(self):
         self.browser.get(self.url)
+        #self.browser.implicitly_wait(30)
+        register_page = self.browser.find_element_by_xpath('/html/body/div[2]/div/div[2]/li[1]/a[2]')
+        register_page.click()
 
-        register_firstName = self.browser.find_element_by_id('usernamereg-firstName')
-        register_firstName.send_keys(firstName)
-        time.sleep(0.5)
 
-        register_lastName = self.browser.find_element_by_id('usernamereg-lastName')
-        register_lastName.send_keys(lastName)
-        time.sleep(0.5)
+    def register_url(self):
+        register_url = self.browser.current_url
+        check_url = re.search('Person', register_url)
 
-        register_email = self.browser.find_element_by_id('usernamereg-yid')
-        register_email.send_keys(email)
-        time.sleep(0.5)
+        if check_url == None:
+            print('fail')
+        else:
+            print(register_url)
 
-        register_password = self.browser.find_element_by_id('usernamereg-password')
-        register_password.send_keys(password)
-        time.sleep(0.5)
 
-        register_shortCountryCode = Select(self.browser.find_element_by_name('shortCountryCode'))
-        op = register_shortCountryCode.first_selected_option
-        if op.text != '台灣 ‪(+886)‬':
-            register_shortCountryCode.select_by_value('TW')
-        time.sleep(0.5)
+    def pid(self):
+        register_pid = self.browser.find_element_by_id('pid')
+        register_pid.send_keys(pid_number)
+        self.browser.find_element_by_xpath('/html/body').click()
 
-        register_phone = self.browser.find_element_by_id('usernamereg-phone')
-        register_phone.send_keys(phone)
-        time.sleep(0.5)
+        try:
+            WebDriverWait(self.browser, 1).until(lambda x: x.find_element_by_id("pid-error"))
+            pid_error = self.browser.find_element_by_id('pid-error').text
+            print(pid_error)
+        except:
+            print('fail')
 
-        register_month = Select(self.browser.find_element_by_id('usernamereg-month'))
-        register_month.select_by_value(month)
-        time.sleep(0.5)
 
-        register_day = self.browser.find_element_by_id('usernamereg-day')
-        register_day.send_keys(day)
-        time.sleep(0.5)
 
-        register_year = self.browser.find_element_by_id('usernamereg-year')
-        register_year.send_keys(year)
-        time.sleep(0.5)
 
-        register_sex = self.browser.find_element_by_id('usernamereg-freeformGender')
-        register_sex.send_keys(sex)
-        time.sleep(0.5)
 
-        register_submit = self.browser.find_element_by_id('reg-submit-button')
-        register_submit.click()
+
 
 
 if __name__ == "__main__":
-    chromedriver_path = r'C:\Users\Administrator\PycharmProjects\perry\chromedriver.exe'
-    url = r'https://login.yahoo.com/account/create?.src=twfp&.lang=zh-Hant-TW&.intl=tw&.done=https%3A%2F%2Ftw.yahoo.com%2F&specId=yidReg'
-    firstName = '名字'
-    lastName = '姓氏'
-    email = '電子郵件'
-    password = '密碼'
-    phone = '手機'
-    month = '出生月份'
-    day = '出生日期'
-    year = '出生年份'
-    sex = '性別'
+    chromedriver_path = r'C:\Users\ADMIN\PycharmProjects\chromedriver.exe'
+    url = r'https://www.railway.gov.tw/tra-tip-web/tip'
+    pid_number = '123'
     a = Yahoo()
-    a.register()
+    a.pid()
