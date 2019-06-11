@@ -41,6 +41,7 @@ class Taiwan_railway:
 
     def password_error(self):
         register_password = self.browser.find_element_by_id('pwd')
+
         for p in password:
             register_password.send_keys(p)
             self.browser.find_element_by_xpath('/html/body').click()
@@ -88,10 +89,43 @@ class Taiwan_railway:
             print('fail')
 
 
+    def birth_year(self):
+        birthyear = self.browser.find_element_by_id('birthYear')
+
+        for y in b_year:
+            birthyear.send_keys(y)
+            self.browser.find_element_by_xpath('/html/body').click()
+
+            try:
+                WebDriverWait(self.browser, 1).until(lambda x: x.find_element_by_id("birthYear"))
+                birthYear_error = self.browser.find_element_by_id('birthYear-error').text
+                print(birthYear_error)
+            except:
+                print('fail')
+
+            time.sleep(1)
+            birthyear.clear()
+
+
+    def year_btn(self):
+        datepickeryear = self.browser.find_element_by_xpath('//*[@id="myForm"]/div[6]/div/div[1]/div/button')
+        datepickeryear.click()
+
+        try:
+            WebDriverWait(self.browser, 1).until(lambda x: x.find_element_by_xpath('/html/body/div[5]/div[3]'))
+            prev = self.browser.find_element_by_xpath('/html/body/div[5]/div[3]/table/thead/tr[2]/th[1]')
+            prev.click()
+            choice_year = self.browser.find_element_by_xpath('/html/body/div[5]/div[3]/table/tbody/tr/td/span[3]')
+            choice_year.click()
+        except:
+            print('fail')
+
+
 if __name__ == "__main__":
     chromedriver_path = r'C:\Users\ADMIN\PycharmProjects\chromedriver.exe'
     url = r'https://www.railway.gov.tw/tra-tip-web/tip'
     pid_number = '123'
     password = ['aaaaaaaa','12345678','aa1234','aaaa123456789']
+    b_year = [2010]
     a = Taiwan_railway()
-    a. sex_default()
+    a.year_btn()
