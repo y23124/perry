@@ -126,6 +126,6 @@ if __name__ == "__main__":
     url = r'https://www.railway.gov.tw/tra-tip-web/tip'
     pid_number = '123'
     password = ['aaaaaaaa','12345678','aa1234','aaaa123456789']
-    b_year = [2010]
+    b_year = ['test','!@#','測試',1899,2100,2010]
     a = Taiwan_railway()
     a.year_btn()
