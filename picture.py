@@ -4,7 +4,7 @@ import pytesseract
 import time
 
 driver_path = r'C:\Users\ADMIN\PycharmProjects\chromedriver.exe'
-web_url = r'http://www.khxhm.com/Register'
+web_url = r'url'
 driver = webdriver.Chrome(driver_path)
 driver.get(web_url)
 
