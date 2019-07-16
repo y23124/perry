@@ -16,7 +16,7 @@ image.show()
 c = input("請輸入驗證碼:")
 
 login_url = "http://l08v45.cn/login.lgf"
-payload = "username=admin&password=123456&code=" + c
+payload = "username=admin&password=123456&code="+c
 headers = {
     'Accept': "application/json, text/javascript, */*; q=0.01",
     'Accept-Language': "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
@@ -32,55 +32,74 @@ headers = {
             }
 
 login_res = requests.request("POST", login_url, data=payload, headers=headers)
-r = login_res.status_code
 print(login_res.json()['message'])
 
-change_pwd_url = 'http://l08v45.cn//reset_login_pwd.lgf'
-change_pwd_data = 'id=&oldPwd=123456&newPwd=123456&confirmPwd=123456'
-change_pwd_res = requests.request('POST', change_pwd_url, data=change_pwd_data, headers=headers)
-change_pwd_code = change_pwd_res.status_code
-print(change_pwd_res.json()['message'])
+
+insertUserLevel_url = 'http://l08v45.cn/userlevel/save.lgf'
+searchUserLevel_url = 'http://l08v45.cn/userlevel/list.lgf'
 
 
 class Login(unittest.TestCase):
     """登入 """
-
     #用於測試用例執行前的初始化工作
     def setUp(self):
         pass
 
     def test_login(self):
-        self.assertEqual(200,r)
+        self.assertEqual('SUCCESS',login_res.json()['status'], msg=login_res.json())
 
     def tearDown(self):
         pass
 
 
-class Change_Pwd(unittest.TestCase):
-    """ 修改密碼"""
-
-    #用於測試用例執行前的初始化工作
+class UserLevel(unittest.TestCase):
+    """會員級別新增"""
     def setUp(self):
-        print("test start")
+        pass
 
-    def test_change_Pwd(self):
-        self.assertEqual(100,change_pwd_code)
+    def test_null(self):
+        """參數全空"""
+        nullUserLevel_data = 'code=&name=&enable='
+        nullUserLevel_res = requests.request('POST', insertUserLevel_url, data=nullUserLevel_data, headers=headers)
+        self.assertEqual('SUCCESS',nullUserLevel_res.json()['status'], msg=nullUserLevel_res.json())
+
+    def test_type(self):
+        """參數類型"""
+        typeUserLevel_data = 'code=test&name=test&enable=test'
+        typeUserLevel_res = requests.request('POST', insertUserLevel_url, data=typeUserLevel_data, headers=headers)
+        self.assertEqual(200,typeUserLevel_res.status_code)
+
+    def test_insert(self):
+        """正確參數"""
+        insertUserLevel_data = 'code=123&name=perry&enable=true'
+        insertUserLevel_res = requests.request('POST', insertUserLevel_url, data=insertUserLevel_data, headers=headers)
+        self.assertEqual('SUCCESS',insertUserLevel_res.json()['status'])
+
+    def test_search(self):
+        """查詢是否新增"""
+        searchUserLevel_data = 'darw=&orderBy=add_time&orderType=desc&queryPage=1&pageSize=10&nameLike=perry&enable='
+        searchUserLevel_res = requests.request('POST', searchUserLevel_url, data=searchUserLevel_data,headers=headers)
+        self.assertEqual('SUCCESS',searchUserLevel_res.json()['status'])
 
     def tearDown(self):
-        print("test end")
+        pass
+
 
 
 if __name__ == '__main__':
 
     suite=unittest.TestSuite()
     suite.addTest(Login("test_login"))
-    suite.addTest(Change_Pwd('test_change_Pwd'))
+    suite.addTest(UserLevel('test_null'))
+    suite.addTest(UserLevel('test_type'))
+    suite.addTest(UserLevel('test_insert'))
+    suite.addTest(UserLevel('test_search'))
     now=time.strftime("%Y-%m-%d %H_%M_%S")
     #定義報告存放路徑
-    filename='./report/'+ now +'.html'
+    filename=r'C:\Users\perry\perry\report\Result_'+ now +'.html'
     fp=open(filename,'wb')
     #定義測試報告
-    runner=report.HTMLTestRunner(stream=fp,title='測試報告',tester='Perry')
+    runner=report.HTMLTestRunner(stream=fp,title='測試報告',tester='Perry',verbosity=2)
     runner.run(suite)
     fp.close()#關閉報告檔案
 
